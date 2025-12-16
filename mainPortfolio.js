@@ -1,5 +1,6 @@
 const footer = document.querySelector(".footer_wrap");
 const hero = document.querySelector(".hero_wrap");
+const skills = document.querySelector(".works_wrap");
 
 //-----------------FOOTER--------------------
 
