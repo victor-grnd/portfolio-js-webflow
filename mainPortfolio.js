@@ -1,8 +1,9 @@
-const sections = Array.from(document.querySelectorAll("[data-section])"));
+const sections = Array.from(document.querySelectorAll("[data-section]")); // ← Corrigé
 const footer = document.querySelector(".footer_wrap");
 const hero = document.querySelector(".hero_wrap");
 let windowHeight = window.innerHeight;
 let windowMiddle = windowHeight * 0.3;
+let hasAnimatedNumbers = false;
 
 //-----------------FOOTER--------------------
 
@@ -123,9 +124,17 @@ window.addEventListener("DOMContentLoaded", () => {
 
 const currentSectionObserver = new IntersectionObserver((entries) => {
   const mostCenterdSection = reduceSections(entries).target;
-  if (mostCenterdSection.dataset.section === "services") {
+  if (
+    mostCenterdSection.dataset.section === "services" &&
+    !hasAnimatedNumbers
+  ) {
     animateNumberScroll(mostCenterdSection);
+    hasAnimatedNumbers = true;
   }
+});
+
+sections.forEach((section) => {
+  currentSectionObserver.observe(section);
 });
 function calculateSectionMiddle(section) {
   const rect = section.boundingClientRect; // because i pass an entry and not a dom element
