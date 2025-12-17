@@ -1,4 +1,4 @@
-const sections = Array.from(document.querySelectorAll("[data-section]")); // ← Corrigé
+const sections = Array.from(document.querySelectorAll("[data-section]"));
 const footer = document.querySelector(".footer_wrap");
 const hero = document.querySelector(".hero_wrap");
 let windowHeight = window.innerHeight;
@@ -120,7 +120,7 @@ window.addEventListener("DOMContentLoaded", () => {
     .add(circleTween, 1.63);
 });
 
-//----- NUMBERS SCROLL------//
+//----- NUMBERS SCROLL------
 
 const currentSectionObserver = new IntersectionObserver((entries) => {
   const mostCenterdSection = reduceSections(entries).target;
@@ -137,7 +137,7 @@ sections.forEach((section) => {
   currentSectionObserver.observe(section);
 });
 function calculateSectionMiddle(section) {
-  const rect = section.boundingClientRect; // because i pass an entry and not a dom element
+  const rect = section.boundingClientRect; // because I pass an entry and not a dom element
 
   const visibleTop = Math.max(0, rect.top);
   const visibleBottom = Math.min(window.innerHeight, rect.bottom);
@@ -183,6 +183,6 @@ function animateNumberScroll(section) {
   });
 
   digitsScrollTl.to(digitsScrollWrapper, {
-    y: -((cardsCount - 1) * digitHeight + 2) + "rem", // i add 2 for safety margin
+    y: -((cardsCount - 1) * digitHeight + 2) + "rem", // I add 2 for safety margin
   });
 }
