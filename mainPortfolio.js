@@ -175,7 +175,7 @@ function animateNumberScroll(section) {
   const digitsScrollTl = gsap.timeline({
     scrollTrigger: {
       trigger: section,
-      start: "7% 50%",
+      start: "20% 50%",
       end: "90% top",
       scrub: true,
       markers: true,
