@@ -1,5 +1,8 @@
+const sections = Array.from(document.querySelectorAll("[data-section])"));
 const footer = document.querySelector(".footer_wrap");
 const hero = document.querySelector(".hero_wrap");
+let windowHeight = window.innerHeight;
+let windowMiddle = windowHeight * 0.3;
 
 //-----------------FOOTER--------------------
 
@@ -117,11 +120,18 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 //----- NUMBERS SCROLL------//
+
+const currentSectionObserver = new IntersectionObserver((entries) => {
+  const mostCenterdSection = reduceSections(entries).target;
+  if (mostCenterdSection.dataset.section === "services") {
+    animateNumberScroll();
+  }
+});
 function calculateSectionMiddle(section) {
-  const rect = section.getBoundingClientRect();
+  const rect = section.boundingClientRect; // because i pass an entry and not a dom element
 
   const visibleTop = Math.max(0, rect.top);
-  const visibleBottom = Math.min(windowHeight, rect.bottom);
+  const visibleBottom = Math.min(window.innerHeight, rect.bottom);
   const visibleHeight = visibleBottom - visibleTop;
   const visibleCenter = visibleTop + visibleHeight / 2;
 
@@ -139,4 +149,21 @@ function reduceSections(sections) {
   });
 
   return centeredMostSection;
+}
+
+function animateNumberScroll() {
+  const cardsCount = document.querySelectorAll(".services_card_wrap").length;
+  const digitsScrollWrapper = document.querySelector(".services_digits-scroll");
+  const digitHeight = 5.2;
+
+  for (let i = 1; i < cardsCount + 1; i++) {
+    const spanEl = document.createElement("span");
+    spanEl.textContent = i;
+    spanEl.classList.add("services_span");
+    digitsScrollWrapper.appendChild(spanEl);
+  }
+
+  const digitsScrollTl = gsap.timeline({
+    scrollTrigger,
+  });
 }
