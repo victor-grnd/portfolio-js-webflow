@@ -163,7 +163,7 @@ function reduceSections(sections) {
 function animateNumberScroll(section) {
   const cardsCount = document.querySelectorAll(".services_card_wrap").length;
   const digitsScrollWrapper = document.querySelector(".services_digits-scroll");
-  const digitHeight = 5.2;
+  const digitHeight = 5.19;
 
   for (let i = 1; i < cardsCount + 1; i++) {
     const spanEl = document.createElement("span");
