@@ -3,6 +3,50 @@ const hero = document.querySelector(".hero_wrap");
 
 //-----------------FOOTER--------------------
 
+function footerAnimation() {
+  function animateFooterCircles() {
+    const footerCircles = footer.querySelectorAll(".footer_decoration");
+
+    const footerTl = gsap.timeline();
+
+    footerCircles.forEach((circle) => {
+      const [axis, percentage] = circle.classList.contains("is-left")
+        ? ["yPercent", -61]
+        : ["xPercent", 70];
+
+      footerTl.fromTo(
+        circle,
+        {
+          [axis]: percentage,
+          duration: 1,
+        },
+        {
+          [axis]: 0,
+          duration: 1,
+        },
+        0
+      );
+    });
+  }
+  const footerObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animateFooterCircles();
+          footerObserver.disconnect();
+        }
+      });
+    },
+    {
+      threshold: 0.6,
+    }
+  );
+
+  footerObserver.observe(footer);
+}
+
+footerAnimation();
+
 window.addEventListener("DOMContentLoaded", () => {
   //--------LENIS----------
   function initLenis() {
@@ -20,49 +64,6 @@ window.addEventListener("DOMContentLoaded", () => {
     gsap.ticker.lagSmoothing(0);
   }
   initLenis();
-  function footerAnimation() {
-    function animateFooterCircles() {
-      const footerCircles = footer.querySelectorAll(".footer_decoration");
-
-      const footerTl = gsap.timeline();
-
-      footerCircles.forEach((circle) => {
-        const [axis, percentage] = circle.classList.contains("is-left")
-          ? ["yPercent", -61]
-          : ["xPercent", 70];
-
-        footerTl.fromTo(
-          circle,
-          {
-            [axis]: percentage,
-            duration: 1,
-          },
-          {
-            [axis]: 0,
-            duration: 1,
-          },
-          0
-        );
-      });
-    }
-    const footerObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            animateFooterCircles();
-            footerObserver.disconnect();
-          }
-        });
-      },
-      {
-        threshold: 0.6,
-      }
-    );
-
-    footerObserver.observe(footer);
-  }
-
-  footerAnimation();
 
   //---------------LOAD ANIMATION------------------------
 
@@ -114,3 +115,28 @@ window.addEventListener("DOMContentLoaded", () => {
     .add(secondLineTween, 0.84)
     .add(circleTween, 1.63);
 });
+
+//----- NUMBERS SCROLL------//
+function calculateSectionMiddle(section) {
+  const rect = section.getBoundingClientRect();
+
+  const visibleTop = Math.max(0, rect.top);
+  const visibleBottom = Math.min(windowHeight, rect.bottom);
+  const visibleHeight = visibleBottom - visibleTop;
+  const visibleCenter = visibleTop + visibleHeight / 2;
+
+  return visibleCenter;
+}
+
+function reduceSections(sections) {
+  const centeredMostSection = sections.reduce((bestEntrySoFar, section) => {
+    const bestEntrySoFarCenter = calculateSectionMiddle(bestEntrySoFar);
+    const sectionCenter = calculateSectionMiddle(section);
+    return Math.abs(windowMiddle - sectionCenter) <
+      Math.abs(windowMiddle - bestEntrySoFarCenter)
+      ? section
+      : bestEntrySoFar;
+  });
+
+  return centeredMostSection;
+}
