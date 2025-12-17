@@ -124,7 +124,7 @@ window.addEventListener("DOMContentLoaded", () => {
 const currentSectionObserver = new IntersectionObserver((entries) => {
   const mostCenterdSection = reduceSections(entries).target;
   if (mostCenterdSection.dataset.section === "services") {
-    animateNumberScroll();
+    animateNumberScroll(mostCenterdSection);
   }
 });
 function calculateSectionMiddle(section) {
@@ -151,7 +151,7 @@ function reduceSections(sections) {
   return centeredMostSection;
 }
 
-function animateNumberScroll() {
+function animateNumberScroll(section) {
   const cardsCount = document.querySelectorAll(".services_card_wrap").length;
   const digitsScrollWrapper = document.querySelector(".services_digits-scroll");
   const digitHeight = 5.2;
@@ -164,6 +164,16 @@ function animateNumberScroll() {
   }
 
   const digitsScrollTl = gsap.timeline({
-    scrollTrigger,
+    scrollTrigger: {
+      trigger: section,
+      start: "7% 50%",
+      end: "90% top",
+      scrub: true,
+      markers: true,
+    },
+  });
+
+  digitsScrollTl.to(digitsScrollWrapper, {
+    y: -((cardsCount - 1) * digitHeight + 2) + "rem", // i add 2 for safety margin
   });
 }
