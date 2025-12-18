@@ -204,9 +204,11 @@ function animateTextColor(section) {
   const descriptionSpan = section.querySelector(".about_description");
   let [splitedSpan, lines] = initLinesSplit(descriptionSpan);
   lines.forEach((line) => {
-    const blueEl = document.createElement("div");
-    blueEl.classList.add("blue_mask");
-    line.appendChild(blueEl);
+    console.log(line);
+
+    //const blueEl = document.createElement("div");
+    // blueEl.classList.add("blue_mask");
+    //line.appendChild(blueEl);
   });
 
   window.addEventListener("resize", () => {
