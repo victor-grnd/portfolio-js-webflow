@@ -195,7 +195,7 @@ function animateNumberScroll(section) {
 function initLinesSplit(text) {
   const splitedText = SplitText.create(text, {
     type: "lines",
-    linesClass: "about_lines",
+    linesClass: "about_line",
   });
   return [splitedText, Array.from(splitedText.lines)]; // Retourne lines, pas chars
 }
@@ -204,7 +204,6 @@ function animateTextColor(section) {
   const descriptionSpan = section.querySelector(".about_description");
   let [splitedSpan, lines] = initLinesSplit(descriptionSpan);
   lines.forEach((line) => {
-    line.classList.add("about_lines");
     const blueEl = document.createElement("div");
     blueEl.classList.add("blue_mask");
     line.appendChild(blueEl);
