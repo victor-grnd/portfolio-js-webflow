@@ -207,9 +207,27 @@ function animateTextColor(section) {
 
   function createBlackMasks() {
     lines.forEach((line) => {
-      const blueEl = document.createElement("span");
-      blueEl.classList.add("blue_mask");
-      line.appendChild(blueEl);
+      const blackMask = document.createElement("span");
+      blackMask.classList.add("black_mask");
+      line.appendChild(blackMask);
+    });
+  }
+
+  function createLinesMasksStagger() {
+    lines.forEach((line) => {
+      const mask = line.querySelector(".black_mask");
+      const masksTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: line,
+          start: "top center",
+          end: "bottom, center",
+          scrub: true,
+        },
+      });
+
+      masksTl.to(mask, {
+        width: "0%",
+      });
     });
   }
 
