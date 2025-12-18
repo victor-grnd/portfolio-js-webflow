@@ -184,5 +184,6 @@ function animateNumberScroll(section) {
 
   digitsScrollTl.to(digitsScrollWrapper, {
     y: -((cardsCount - 1) * digitHeight + 2) + "rem", // I add 2 for safety margin
+    ease: "power1.in",
   });
 }
