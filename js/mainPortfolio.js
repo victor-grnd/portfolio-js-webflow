@@ -194,9 +194,9 @@ function animateNumberScroll(section) {
 
 function initLinesSplit(text) {
   const splitedText = SplitText.create(text, {
-    type: "words, lines",
+    type: "lines",
     linesClass: "about_line",
-    tag: "span",
+    tag: "div",
   });
   return [splitedText, splitedText.lines]; // Retourne lines, pas chars
 }
