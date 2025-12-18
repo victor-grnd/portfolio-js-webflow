@@ -194,28 +194,35 @@ function animateNumberScroll(section) {
 
 function initLinesSplit(text) {
   const splitedText = SplitText.create(text, {
-    type: "lines",
+    type: "words, lines",
     linesClass: "about_line",
     tag: "span",
   });
-  return [splitedText, Array.from(splitedText.lines)]; // Retourne lines, pas chars
+  return [splitedText, splitedText.lines]; // Retourne lines, pas chars
 }
 
 function animateTextColor(section) {
-  const descriptionSpan = section.querySelector(".about_description");
-  let [splitedSpan, lines] = initLinesSplit(descriptionSpan);
-  lines.forEach((line) => {
-    console.log(line);
+  const descriptionSpan = section.querySelector(".about_text");
+  let splitedSpan, lines;
 
-    //const blueEl = document.createElement("div");
-    // blueEl.classList.add("blue_mask");
-    //line.appendChild(blueEl);
-  });
+  function createBlackMasks() {
+    lines.forEach((line) => {
+      const blueEl = document.createElement("span");
+      blueEl.classList.add("blue_mask");
+      line.appendChild(blueEl);
+    });
+  }
 
-  window.addEventListener("resize", () => {
-    splitedSpan.revert();
+  function initAnimateText() {
+    if (splitedSpan) {
+      splitedSpan.revert();
+    }
     [splitedSpan, lines] = initLinesSplit(descriptionSpan);
-  });
+    createBlackMasks();
+  }
+
+  initAnimateText();
+  window.addEventListener("resize", initAnimateText);
 }
 
 animateTextColor(document.querySelector(".about_wrap"));
