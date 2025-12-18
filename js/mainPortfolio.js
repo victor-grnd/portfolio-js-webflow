@@ -204,7 +204,7 @@ function animateTextColor(section) {
   const descriptionSpan = section.querySelector(".about_description");
   let [splitedSpan, lines] = initLinesSplit(descriptionSpan);
   lines.forEach((line) => {
-    line.style.position = "relative";
+    line.classList.add("about_lines");
     const blueEl = document.createElement("div");
     blueEl.classList.add("blue_mask");
     line.appendChild(blueEl);
