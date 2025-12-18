@@ -196,6 +196,7 @@ function initLinesSplit(text) {
   const splitedText = SplitText.create(text, {
     type: "lines",
     linesClass: "about_line",
+    tag: "span",
   });
   return [splitedText, Array.from(splitedText.lines)]; // Retourne lines, pas chars
 }
