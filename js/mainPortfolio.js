@@ -190,7 +190,7 @@ function animateNumberScroll(section) {
   });
 }
 
-//--------TEXT COLOR CHANGE ON SCROLL-------------------
+//----------------TEXT COLOR CHANGE ON SCROLL-------------------
 
 function initLinesSplit(text) {
   const splitedText = SplitText.create(text, {
@@ -219,7 +219,7 @@ function animateTextColor(section) {
       const masksTl = gsap.timeline({
         scrollTrigger: {
           trigger: line,
-          start: "top center",
+          start: "top, center",
           end: "bottom, center",
           scrub: true,
         },
@@ -232,11 +232,13 @@ function animateTextColor(section) {
   }
 
   function initAnimateText() {
+    ScrollTrigger.getAll().forEach((st) => st.kill());
     if (splitedSpan) {
       splitedSpan.revert();
     }
     [splitedSpan, lines] = initLinesSplit(descriptionSpan);
     createBlackMasks();
+    createLinesMasksStagger();
   }
 
   initAnimateText();
