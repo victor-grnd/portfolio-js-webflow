@@ -5,6 +5,39 @@ let windowHeight = window.innerHeight;
 let windowMiddle = windowHeight * 0.3;
 let hasAnimatedNumbers = false;
 
+//-------------UTILITIES-------------
+function initSplit(text) {
+  const splitedText = SplitText.create(text, {
+    type: "chars",
+    mask: "chars",
+  });
+  return splitedText.chars;
+}
+
+function calculateSectionMiddle(section) {
+  const rect = section.boundingClientRect; // because I pass an entry and not a dom element
+
+  const visibleTop = Math.max(0, rect.top);
+  const visibleBottom = Math.min(window.innerHeight, rect.bottom);
+  const visibleHeight = visibleBottom - visibleTop;
+  const visibleCenter = visibleTop + visibleHeight / 2;
+
+  return visibleCenter;
+}
+
+function reduceSections(sections) {
+  const centeredMostSection = sections.reduce((bestEntrySoFar, section) => {
+    const bestEntrySoFarCenter = calculateSectionMiddle(bestEntrySoFar);
+    const sectionCenter = calculateSectionMiddle(section);
+    return Math.abs(windowMiddle - sectionCenter) <
+      Math.abs(windowMiddle - bestEntrySoFarCenter)
+      ? section
+      : bestEntrySoFar;
+  });
+
+  return centeredMostSection;
+}
+
 //-----------------FOOTER--------------------
 
 function footerAnimation() {
@@ -81,14 +114,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const heroSpanSecondLineSplited = initSplit(heroSpans[3]);
   const heroCircle = document.querySelector(".hero_circle");
 
-  function initSplit(text) {
-    const splitedText = SplitText.create(text, {
-      type: "chars",
-      mask: "chars",
-    });
-    return splitedText.chars;
-  }
-
   function initStaggerTween(chars) {
     const tween = gsap.from(chars, {
       opacity: 0,
@@ -120,45 +145,22 @@ window.addEventListener("DOMContentLoaded", () => {
     .add(circleTween, 1.63);
 });
 
-//----- NUMBERS SCROLL------
+//------------------NUMBERS SCROLL-------------
 
 const currentSectionObserver = new IntersectionObserver((entries) => {
   const mostCenterdSection = reduceSections(entries).target;
-  if (
-    mostCenterdSection.dataset.section === "services" &&
-    !hasAnimatedNumbers
-  ) {
+  const sectionName = mostCenterdSection.dataset.section;
+
+  if (sectionName === "services") {
     animateNumberScroll(mostCenterdSection);
-    hasAnimatedNumbers = true;
+  } else if (sectionName === "about") {
+    animateTextColor(mostCenterdSection);
   }
 });
 
 sections.forEach((section) => {
   currentSectionObserver.observe(section);
 });
-function calculateSectionMiddle(section) {
-  const rect = section.boundingClientRect; // because I pass an entry and not a dom element
-
-  const visibleTop = Math.max(0, rect.top);
-  const visibleBottom = Math.min(window.innerHeight, rect.bottom);
-  const visibleHeight = visibleBottom - visibleTop;
-  const visibleCenter = visibleTop + visibleHeight / 2;
-
-  return visibleCenter;
-}
-
-function reduceSections(sections) {
-  const centeredMostSection = sections.reduce((bestEntrySoFar, section) => {
-    const bestEntrySoFarCenter = calculateSectionMiddle(bestEntrySoFar);
-    const sectionCenter = calculateSectionMiddle(section);
-    return Math.abs(windowMiddle - sectionCenter) <
-      Math.abs(windowMiddle - bestEntrySoFarCenter)
-      ? section
-      : bestEntrySoFar;
-  });
-
-  return centeredMostSection;
-}
 
 function animateNumberScroll(section) {
   const cardsCount = document.querySelectorAll(".services_card_wrap").length;
@@ -184,6 +186,32 @@ function animateNumberScroll(section) {
 
   digitsScrollTl.to(digitsScrollWrapper, {
     y: -((cardsCount - 1) * digitHeight + 2) + "rem", // I add 2 for safety margin
-    ease: "power1.out",
+    ease: "power1.in",
+  });
+}
+
+//--------TEXT COLOR CHANGE ON SCROLL-------------------
+
+function initLinesSplit(text) {
+  const splitedText = SplitText.create(text, {
+    type: "lines",
+    linesClass: "about_lines",
+  });
+  return [splitedText, Array.from(splitedText.lines)]; // Retourne lines, pas chars
+}
+
+function animateTextColor(section) {
+  const descriptionSpan = section.querySelector(".about_description");
+  let [splitedSpan, lines] = initLinesSplit(descriptionSpan);
+  lines.forEach((line) => {
+    line.style.position = "relative";
+    const blueEl = document.createElement("div");
+    blueEl.classList.add("blue_mask");
+    line.appendChild(blueEl);
+  });
+
+  window.addEventListener("resize", () => {
+    splitedSpan.revert();
+    [splitedSpan, lines] = initLinesSplit(descriptionSpan);
   });
 }
