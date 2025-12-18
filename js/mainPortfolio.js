@@ -215,3 +215,5 @@ function animateTextColor(section) {
     [splitedSpan, lines] = initLinesSplit(descriptionSpan);
   });
 }
+
+animateTextColor(document.querySelector(".about_wrap"));
