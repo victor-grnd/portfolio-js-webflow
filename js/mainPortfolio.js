@@ -279,18 +279,20 @@ function textMaskAnimation() {
   let textSplited;
   let linesToAnimate;
   let resizeTimeout;
-  const textToSplit = document.querySelector(".about_text");
+  const textToAnimateWrapper = document.querySelector(".about_content");
+  const textToSplit = document.querySelector(".about_text.is-above");
 
   function initTextAnimation() {
+    const textToSplitClone = textToSplit.cloneNode(true);
+    textToSplitClone.classList.remove("is-above");
+    textToSplitClone.classList.add("is-below");
+    textToAnimateWrapper.appendChild(textToSplitClone);
     textSplited = SplitText.create(textToSplit, {
-      types: "lines",
-      lineClass: "about_line",
+      type: "lines",
+      linesClass: "about_line",
     });
     linesToAnimate = textSplited.lines;
 
-    const textToSplitClone = textToSplit.cloneNode(true);
-    textToSplitClone.classList.add("is-scroll-bg");
-    textToSplit.after(textToSplitClone);
     createAnimation();
   }
 
@@ -306,7 +308,7 @@ function textMaskAnimation() {
           },
         })
         .to(line, {
-          "--size": "-3%",
+          "--size": "0%",
           duration: 1,
         });
     });
@@ -315,22 +317,28 @@ function textMaskAnimation() {
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
-      textSplited.revert();
-      const textAnimateBackgrounds = document.querySelectorAll(".is-scroll-bg");
-      textAnimateBackgrounds.forEach((bg) => {
-        bg.remove();
-      });
-      ScrollTrigger.getAll().forEach((st) => {
-        if (st.trigger && st.trigger.classList.contains("about_line")) {
-          st.kill();
-        }
-      });
+      if (windowWidth !== window.innerWidth) {
+        textSplited.revert();
+        const textAnimateBackgrounds = document.querySelectorAll(
+          ".about_text.is-below"
+        );
+        textAnimateBackgrounds.forEach((bg) => {
+          bg.remove();
+        });
+        ScrollTrigger.getAll().forEach((st) => {
+          if (st.trigger && st.trigger.classList.contains("about_line")) {
+            st.kill();
+          }
+        });
 
-      initTextAnimation();
+        initTextAnimation();
 
-      windowWidth = window.innerWidth;
+        windowWidth = window.innerWidth;
+      }
     }, 200);
   });
+
+  initTextAnimation();
 }
 
 textMaskAnimation();
