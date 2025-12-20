@@ -1,8 +1,7 @@
 .about_line {
   position: relative;
-  --size: 100%;
+  --size: 0%;
   clip-path: inset(0 var(--size) 0 0);
-  padding-bottom: 0.2em;
   z-index: 2; /* Assurez-vous que la ligne est au-dessus de sa copie */
 }
 
@@ -13,13 +12,6 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 1; /* Assurez-vous que la copie est en dessous de la ligne d'origine */
-}
-
-.is-scroll-bg .line {
-  -webkit-clip-path: none;
-  clip-path: none;
-}
-.about_text.is-scroll-bg {
-  color: #111;
+  z-index: 1;
+  color: #c5e1f6; /* Assurez-vous que la copie est en dessous de la ligne d'origine */
 }
