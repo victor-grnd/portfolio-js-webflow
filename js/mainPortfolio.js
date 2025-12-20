@@ -192,57 +192,150 @@ function animateNumberScroll(section) {
 
 //----------------TEXT COLOR CHANGE ON SCROLL-------------------
 
-function initLinesSplit(text) {
-  const splitedText = SplitText.create(text, {
-    type: "lines",
-    linesClass: "about_line",
-    tag: "div",
+/*function initLinesSplit(text) {
+  const splitedText = new SplitType(text, {
+    types: "lines",
   });
-  return [splitedText, splitedText.lines]; // Retourne lines, pas chars
+  return [splitedText, splitedText.lines];
 }
 
 function animateTextColor(section) {
-  const descriptionSpan = section.querySelector(".about_text");
-  let splitedSpan, lines;
+  const textToAnimate = section.querySelector(".about_text");
+  if (!textToAnimate) return;
 
-  function createBlackMasks() {
+  let splitInstance;
+  let resizeTimeout;
+
+  function initTextAnimation() {
+    ScrollTrigger.getAll().forEach((st) => {
+      if (section.contains(st.trigger)) {
+        st.kill();
+      }
+    });
+
+    if (splitInstance) {
+      splitInstance.revert();
+    }
+
+    const [split, lines] = initLinesSplit(textToAnimate);
+    splitInstance = split;
+
+    createBlackMasks(lines);
+    createLinesMasksStagger(lines);
+
+    ScrollTrigger.refresh();
+  }
+
+  initTextAnimation();
+
+  function createBlackMasks(lines) {
     lines.forEach((line) => {
+      if (line.querySelector(".black_mask")) return;
+      line.classList.add("about_line");
       const blackMask = document.createElement("span");
       blackMask.classList.add("black_mask");
       line.appendChild(blackMask);
     });
   }
 
-  function createLinesMasksStagger() {
+  function createLinesMasksStagger(lines) {
     lines.forEach((line) => {
       const mask = line.querySelector(".black_mask");
-      const masksTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: line,
-          start: "top, center",
-          end: "bottom, center",
-          scrub: true,
-        },
-      });
 
-      masksTl.to(mask, {
-        width: "0%",
-      });
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: line,
+            start: "top 75%",
+            end: "bottom center",
+            scrub: 1,
+          },
+        })
+        .to(mask, {
+          width: "0%",
+          ease: "power1.in",
+        });
     });
   }
 
-  function initAnimateText() {
-    ScrollTrigger.getAll().forEach((st) => st.kill());
-    if (splitedSpan) {
-      splitedSpan.revert();
-    }
-    [splitedSpan, lines] = initLinesSplit(descriptionSpan);
-    createBlackMasks();
-    createLinesMasksStagger();
-  }
-
-  initAnimateText();
-  window.addEventListener("resize", initAnimateText);
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(initTextAnimation, 200);
+  });
 }
 
 animateTextColor(document.querySelector(".about_wrap"));
+*/
+
+let typeSplit;
+
+function runSplit() {
+  typeSplit = SplitText.create("[textscroll]", {
+    types: "lines",
+    lineClass: "line",
+  });
+
+  // Dupliquer les éléments avec l'attribut "textscroll"
+  document.querySelectorAll("[textscroll]").forEach((el) => {
+    const clone = el.cloneNode(true);
+    clone.classList.remove("line");
+    clone.classList.add("is-scroll-bg");
+    el.after(clone);
+  });
+
+  createAnimation();
+}
+
+runSplit();
+
+let windowWidth = window.innerWidth;
+
+window.addEventListener("resize", () => {
+  if (windowWidth !== window.innerWidth) {
+    // Réinitialiser SplitText
+    typeSplit.revert();
+
+    // Supprimer les éléments clonés
+    document.querySelectorAll(".is-scroll-bg").forEach((el) => el.remove());
+
+    // Reset GSAP & ScrollTrigger
+    gsap.globalTimeline.clear();
+    ScrollTrigger.getAll().forEach((st) => st.kill());
+
+    // Relancer
+    runSplit();
+
+    windowWidth = window.innerWidth;
+  }
+});
+
+gsap.registerPlugin(ScrollTrigger);
+
+function createAnimation() {
+  document.querySelectorAll(".line:not(.is-scroll-bg)").forEach((line) => {
+    gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: line,
+          start: "top 75%",
+          end: "bottom center",
+          scrub: 1,
+        },
+      })
+      .to(line, {
+        "--size": "-3%",
+        duration: 1,
+      });
+  });
+}
+
+// DOM ready (équivalent de $(document).ready)
+document.addEventListener("DOMContentLoaded", () => {
+  const thumbsList = document.querySelector(".testimonial-thumbs-list");
+  if (!thumbsList) return;
+
+  const height = thumbsList.offsetHeight;
+  const topValue = `calc(50vh - ${height / 2}px)`;
+
+  thumbsList.style.top = topValue;
+});
