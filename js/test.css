@@ -1,7 +1,7 @@
 .about_line {
   position: relative;
   --size: 0%;
-  clip-path: inset(0 var(--size) 0 0);
+  clip-path: inset(0 0 0 var(--size));
   z-index: 2; /* Assurez-vous que la ligne est au-dessus de sa copie */
 }
 

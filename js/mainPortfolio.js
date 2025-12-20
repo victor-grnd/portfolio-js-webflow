@@ -308,7 +308,7 @@ function textMaskAnimation() {
           },
         })
         .to(line, {
-          "--size": "0%",
+          "--size": "100%",
           duration: 1,
         });
     });
