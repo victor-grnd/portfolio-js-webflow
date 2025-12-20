@@ -267,24 +267,27 @@ function animateTextColor(section) {
 animateTextColor(document.querySelector(".about_wrap"));
 */
 
-let typeSplit;
+function textAnimate() {
+  const textToSplit = document.querySelector(".about_text");
 
-function runSplit() {
-  typeSplit = SplitText.create("[textscroll]", {
-    types: "lines",
-    lineClass: "line",
-  });
+  function initTextSplit() {
+    typeSplit = SplitText.create(textToSplit, {
+      types: "lines",
+      lineClass: "line",
+    });
 
-  // Dupliquer les éléments avec l'attribut "textscroll"
-  document.querySelectorAll("[textscroll]").forEach((el) => {
-    const clone = el.cloneNode(true);
-    clone.classList.remove("line");
-    clone.classList.add("is-scroll-bg");
-    el.after(clone);
-  });
+    // Dupliquer les éléments avec l'attribut "textscroll"
+    document.querySelectorAll("[textscroll]").forEach((el) => {
+      const clone = el.cloneNode(true);
+      clone.classList.remove("line");
+      clone.classList.add("is-scroll-bg");
+      el.after(clone);
+    });
 
-  createAnimation();
+    createAnimation();
+  }
 }
+let typeSplit;
 
 runSplit();
 
