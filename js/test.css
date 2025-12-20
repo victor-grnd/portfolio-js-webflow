@@ -1,10 +1,9 @@
 .about_line {
   position: relative;
   --size: 0%;
-  --opacity: 0.2;
-  clip-path: inset(0 var(--size) 0 0);
-  opacity: var(--opacity);
-  z-index: 2; /* Assurez-vous que la ligne est au-dessus de sa copie */
+  clip-path: inset(0 0 0 var(--size));
+  z-index: 2;
+  color: #c5e1f6;
 }
 
 .about_text.is-below {
@@ -15,5 +14,5 @@
   height: 100%;
   pointer-events: none;
   z-index: 1;
-  opacity: 1;
+  color: #111;
 }
