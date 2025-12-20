@@ -3,6 +3,7 @@ const footer = document.querySelector(".footer_wrap");
 const hero = document.querySelector(".hero_wrap");
 let windowHeight = window.innerHeight;
 let windowMiddle = windowHeight * 0.3;
+let windowWidth = window.innerWidth;
 let hasAnimatedNumbers = false;
 
 //-------------UTILITIES-------------
@@ -153,8 +154,6 @@ const currentSectionObserver = new IntersectionObserver((entries) => {
 
   if (sectionName === "services") {
     animateNumberScroll(mostCenterdSection);
-  } else if (sectionName === "about") {
-    animateTextColor(mostCenterdSection);
   }
 });
 
@@ -163,6 +162,8 @@ sections.forEach((section) => {
 });
 
 function animateNumberScroll(section) {
+  if (hasAnimatedNumbers) return;
+  hasAnimatedNumbers = true;
   const cardsCount = document.querySelectorAll(".services_card_wrap").length;
   const digitsScrollWrapper = document.querySelector(".services_digits-scroll");
   const digitHeight = 5.19;
@@ -180,7 +181,7 @@ function animateNumberScroll(section) {
       start: "20% 50%",
       end: "90% top",
       scrub: true,
-      markers: true,
+      markers: false,
     },
   });
 
@@ -190,90 +191,7 @@ function animateNumberScroll(section) {
   });
 }
 
-//----------------TEXT COLOR CHANGE ON SCROLL-------------------
-
-/*function initLinesSplit(text) {
-  const splitedText = new SplitType(text, {
-    types: "lines",
-  });
-  return [splitedText, splitedText.lines];
-}
-
-function animateTextColor(section) {
-  const textToAnimate = section.querySelector(".about_text");
-  if (!textToAnimate) return;
-
-  let splitInstance;
-  let resizeTimeout;
-
-  function initTextAnimation() {
-    ScrollTrigger.getAll().forEach((st) => {
-      if (section.contains(st.trigger)) {
-        st.kill();
-      }
-    });
-
-    if (splitInstance) {
-      splitInstance.revert();
-    }
-
-    const [split, lines] = initLinesSplit(textToAnimate);
-    splitInstance = split;
-
-    createBlackMasks(lines);
-    createLinesMasksStagger(lines);
-
-    ScrollTrigger.refresh();
-  }
-
-  initTextAnimation();
-
-  function createBlackMasks(lines) {
-    lines.forEach((line) => {
-      if (line.querySelector(".black_mask")) return;
-      line.classList.add("about_line");
-      const blackMask = document.createElement("span");
-      blackMask.classList.add("black_mask");
-      line.appendChild(blackMask);
-    });
-  }
-
-  function createLinesMasksStagger(lines) {
-    lines.forEach((line) => {
-      const mask = line.querySelector(".black_mask");
-
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: line,
-            start: "top 75%",
-            end: "bottom center",
-            scrub: 1,
-          },
-        })
-        .to(mask, {
-          width: "0%",
-          ease: "power1.in",
-        });
-    });
-  }
-
-  window.addEventListener("resize", () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(initTextAnimation, 200);
-  });
-}
-
-animateTextColor(document.querySelector(".about_wrap"));
-
-
-
-
-*/
-
 //-------------------TEXT MASK ANIMATION----------------------
-
-let windowWidth = window.innerWidth;
 
 function textMaskAnimation() {
   let textSplited;
