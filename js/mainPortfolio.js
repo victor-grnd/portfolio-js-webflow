@@ -270,80 +270,67 @@ animateTextColor(document.querySelector(".about_wrap"));
 
 
 */
+
+//-------------------TEXT MASK ANIMATION----------------------
+
 let windowWidth = window.innerWidth;
-let textSplited;
-const textToSplit = document.querySelector(".about_text");
 
-function initTextSplit() {
-  textSplited = SplitText.create(textToSplit, {
-    types: "lines",
-    lineClass: "about_line",
-  });
-}
+function textMaskAnimation() {
+  let textSplited;
+  let linesToAnimate;
+  let resizeTimeout;
+  const textToSplit = document.querySelector(".about_text");
 
-function textAnimate() {
-  initTextSplit();
-  const textToSplitClone = textToSplit.cloneNode(true);
-  textToSplitClone.classList.add("is-scroll-bg");
-  textToSplit.after(textToSplitClone);
-  createAnimation();
-}
-
-function createAnimation() {
-  const linesToAnimate = document.querySelectorAll(
-    ".about_line:not(.is-scroll-bg)"
-  );
-  linesToAnimate.forEach((line) => {
-    gsap
-      .timeline({
-        scrollTrigger: {
-          trigger: line,
-          start: "top 75%",
-          end: "bottom center",
-          scrub: 1,
-        },
-      })
-      .to(line, {
-        "--size": "-3%",
-        duration: 1,
-      });
-  });
-}
-
-window.addEventListener("resize", () => {
-  if (windowWidth !== window.innerWidth) {
-    textSplited.revert();
-
-    document.querySelectorAll(".is-scroll-bg").forEach((el) => el.remove());
-    ScrollTrigger.getAll().forEach((st) => {
-      if (st.trigger && st.trigger.classList.contains("about_line")) {
-        st.kill();
-      }
+  function initTextAnimation() {
+    textSplited = SplitText.create(textToSplit, {
+      types: "lines",
+      lineClass: "about_line",
     });
+    linesToAnimate = textSplited.lines;
 
-    textAnimate();
-
-    windowWidth = window.innerWidth;
+    const textToSplitClone = textToSplit.cloneNode(true);
+    textToSplitClone.classList.add("is-scroll-bg");
+    textToSplit.after(textToSplitClone);
+    createAnimation();
   }
-});
 
-let resizeTimeout;
-window.addEventListener("resize", () => {
-  clearTimeout(resizeTimeout);
-  resizeTimeout = setTimeout(() => {
-    if (windowWidth !== window.innerWidth) {
+  function createAnimation() {
+    linesToAnimate.forEach((line) => {
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: line,
+            start: "top 75%",
+            end: "bottom center",
+            scrub: 1,
+          },
+        })
+        .to(line, {
+          "--size": "-3%",
+          duration: 1,
+        });
+    });
+  }
+
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
       textSplited.revert();
-
-      document.querySelectorAll(".is-scroll-bg").forEach((el) => el.remove());
+      const textAnimateBackgrounds = document.querySelectorAll(".is-scroll-bg");
+      textAnimateBackgrounds.forEach((bg) => {
+        bg.remove();
+      });
       ScrollTrigger.getAll().forEach((st) => {
         if (st.trigger && st.trigger.classList.contains("about_line")) {
           st.kill();
         }
       });
 
-      textAnimate();
+      initTextAnimation();
 
       windowWidth = window.innerWidth;
-    }
-  }, 200);
-});
+    }, 200);
+  });
+}
+
+textMaskAnimation();
