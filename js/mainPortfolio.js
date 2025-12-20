@@ -291,7 +291,7 @@ function textAnimate() {
 
 function createAnimation() {
   const linesToAnimate = document.querySelectorAll(
-    ".about_lines:not(.is-scroll-bg)"
+    ".about_line:not(.is-scroll-bg)"
   );
   linesToAnimate.forEach((line) => {
     gsap
@@ -316,7 +316,7 @@ window.addEventListener("resize", () => {
 
     document.querySelectorAll(".is-scroll-bg").forEach((el) => el.remove());
     ScrollTrigger.getAll().forEach((st) => {
-      if (st.trigger && st.trigger.contains("about_line")) {
+      if (st.trigger && st.trigger.classList.contains("about_line")) {
         st.kill();
       }
     });
@@ -325,4 +325,25 @@ window.addEventListener("resize", () => {
 
     windowWidth = window.innerWidth;
   }
+});
+
+let resizeTimeout;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    if (windowWidth !== window.innerWidth) {
+      textSplited.revert();
+
+      document.querySelectorAll(".is-scroll-bg").forEach((el) => el.remove());
+      ScrollTrigger.getAll().forEach((st) => {
+        if (st.trigger && st.trigger.classList.contains("about_line")) {
+          st.kill();
+        }
+      });
+
+      textAnimate();
+
+      windowWidth = window.innerWidth;
+    }
+  }, 200);
 });
