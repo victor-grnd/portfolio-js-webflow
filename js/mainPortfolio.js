@@ -265,57 +265,35 @@ function animateTextColor(section) {
 }
 
 animateTextColor(document.querySelector(".about_wrap"));
+
+
+
+
 */
+let windowWidth = window.innerWidth;
+let textSplited;
+const textToSplit = document.querySelector(".about_text");
+
+function initTextSplit() {
+  textSplited = SplitText.create(textToSplit, {
+    types: "lines",
+    lineClass: "about_line",
+  });
+}
 
 function textAnimate() {
-  const textToSplit = document.querySelector(".about_text");
-
-  function initTextSplit() {
-    typeSplit = SplitText.create(textToSplit, {
-      types: "lines",
-      lineClass: "line",
-    });
-
-    // Dupliquer les éléments avec l'attribut "textscroll"
-    document.querySelectorAll("[textscroll]").forEach((el) => {
-      const clone = el.cloneNode(true);
-      clone.classList.remove("line");
-      clone.classList.add("is-scroll-bg");
-      el.after(clone);
-    });
-
-    createAnimation();
-  }
+  initTextSplit();
+  const textToSplitClone = textToSplit.cloneNode(true);
+  textToSplitClone.classList.add("is-scroll-bg");
+  textToSplit.after(textToSplitClone);
+  createAnimation();
 }
-let typeSplit;
-
-runSplit();
-
-let windowWidth = window.innerWidth;
-
-window.addEventListener("resize", () => {
-  if (windowWidth !== window.innerWidth) {
-    // Réinitialiser SplitText
-    typeSplit.revert();
-
-    // Supprimer les éléments clonés
-    document.querySelectorAll(".is-scroll-bg").forEach((el) => el.remove());
-
-    // Reset GSAP & ScrollTrigger
-    gsap.globalTimeline.clear();
-    ScrollTrigger.getAll().forEach((st) => st.kill());
-
-    // Relancer
-    runSplit();
-
-    windowWidth = window.innerWidth;
-  }
-});
-
-gsap.registerPlugin(ScrollTrigger);
 
 function createAnimation() {
-  document.querySelectorAll(".line:not(.is-scroll-bg)").forEach((line) => {
+  const linesToAnimate = document.querySelectorAll(
+    ".about_lines:not(.is-scroll-bg)"
+  );
+  linesToAnimate.forEach((line) => {
     gsap
       .timeline({
         scrollTrigger: {
@@ -332,13 +310,19 @@ function createAnimation() {
   });
 }
 
-// DOM ready (équivalent de $(document).ready)
-document.addEventListener("DOMContentLoaded", () => {
-  const thumbsList = document.querySelector(".testimonial-thumbs-list");
-  if (!thumbsList) return;
+window.addEventListener("resize", () => {
+  if (windowWidth !== window.innerWidth) {
+    textSplited.revert();
 
-  const height = thumbsList.offsetHeight;
-  const topValue = `calc(50vh - ${height / 2}px)`;
+    document.querySelectorAll(".is-scroll-bg").forEach((el) => el.remove());
+    ScrollTrigger.getAll().forEach((st) => {
+      if (st.trigger && st.trigger.contains("about_line")) {
+        st.kill();
+      }
+    });
 
-  thumbsList.style.top = topValue;
+    textAnimate();
+
+    windowWidth = window.innerWidth;
+  }
 });
