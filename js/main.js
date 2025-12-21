@@ -169,8 +169,6 @@ function animateNumberScroll(section) {
   const digitHeight = 5.19;
   const safetyMargin = 2;
   const yRange = -((cardsCount - 1) * digitHeight + safetyMargin) + "rem";
-  console.log(yRange);
-
   for (let i = 1; i < cardsCount + 1; i++) {
     const spanEl = document.createElement("span");
     spanEl.textContent = i;
