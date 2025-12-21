@@ -182,7 +182,7 @@ function animateNumberScroll(section) {
     scrollTrigger: {
       trigger: section,
       start: "20% 50%",
-      end: "90% top",
+      end: "+=1400",
       scrub: true,
       markers: false,
     },
