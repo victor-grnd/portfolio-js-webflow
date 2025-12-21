@@ -167,6 +167,9 @@ function animateNumberScroll(section) {
   const cardsCount = document.querySelectorAll(".services_card_wrap").length;
   const digitsScrollWrapper = document.querySelector(".services_digits-scroll");
   const digitHeight = 5.19;
+  const safetyMargin = 2;
+  const yRange = -((cardsCount - 1) * digitHeight + safetyMargin) + "rem";
+  console.log(yRange);
 
   for (let i = 1; i < cardsCount + 1; i++) {
     const spanEl = document.createElement("span");
@@ -186,7 +189,7 @@ function animateNumberScroll(section) {
   });
 
   digitsScrollTl.to(digitsScrollWrapper, {
-    y: -((cardsCount - 1) * digitHeight + 2) + "rem", // I add 2 for safety margin
+    y: yRange,
     ease: "power1.in",
   });
 }
