@@ -1,9 +1,8 @@
 .about_line {
   position: relative;
   --size: 100%;
-  clip-path: inset(0 0 0 var(--size));
+  clip-path: inset(0 var(--size) 0 0);
   z-index: 2;
-  color: #c5e1f6;
 }
 
 .about_text.is-above {

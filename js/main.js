@@ -204,11 +204,11 @@ function textMaskAnimation() {
     const textToSplitClone = textToSplit.cloneNode(true);
     textToSplitClone.classList.remove("is-below");
     textToSplitClone.classList.add("is-above");
+    textToAnimateWrapper.appendChild(textToSplitClone);
     textSplited = SplitText.create(textToSplitClone, {
       type: "lines",
       linesClass: "about_line",
     });
-    textToAnimateWrapper.appendChild(textToSplitClone);
 
     linesToAnimate = textSplited.lines;
 
