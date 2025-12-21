@@ -198,17 +198,18 @@ function textMaskAnimation() {
   let linesToAnimate;
   let resizeTimeout;
   const textToAnimateWrapper = document.querySelector(".about_content");
-  const textToSplit = document.querySelector(".about_text.is-above");
+  const textToSplit = document.querySelector(".about_text.is-below");
 
   function initTextAnimation() {
     const textToSplitClone = textToSplit.cloneNode(true);
-    textToSplitClone.classList.remove("is-above");
-    textToSplitClone.classList.add("is-below");
-    textToAnimateWrapper.appendChild(textToSplitClone);
-    textSplited = SplitText.create(textToSplit, {
+    textToSplitClone.classList.remove("is-below");
+    textToSplitClone.classList.add("is-above");
+    textSplited = SplitText.create(textToSplitClone, {
       type: "lines",
       linesClass: "about_line",
     });
+    textToAnimateWrapper.appendChild(textToSplitClone);
+
     linesToAnimate = textSplited.lines;
 
     createAnimation();
@@ -226,7 +227,7 @@ function textMaskAnimation() {
           },
         })
         .to(line, {
-          "--size": "100%",
+          "--size": "0%",
           duration: 1,
         });
     });
@@ -238,7 +239,7 @@ function textMaskAnimation() {
       if (windowWidth !== window.innerWidth) {
         textSplited.revert();
         const textAnimateBackgrounds = document.querySelectorAll(
-          ".about_text.is-below"
+          ".about_text.is-above"
         );
         textAnimateBackgrounds.forEach((bg) => {
           bg.remove();

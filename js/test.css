@@ -1,18 +1,18 @@
 .about_line {
   position: relative;
-  --size: 0%;
+  --size: 100%;
   clip-path: inset(0 0 0 var(--size));
   z-index: 2;
   color: #c5e1f6;
 }
 
-.about_text.is-below {
+.about_text.is-above {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 1;
+  z-index: 2;
   color: #111;
 }
