@@ -7,13 +7,6 @@ let windowWidth = window.innerWidth;
 let hasAnimatedNumbers = false;
 
 //-------------UTILITIES-------------
-function initSplit(text) {
-  const splitedText = SplitText.create(text, {
-    type: "chars",
-    mask: "chars",
-  });
-  return splitedText.chars;
-}
 
 function calculateSectionMiddle(section) {
   const rect = section.boundingClientRect; // because I pass an entry and not a dom element
@@ -62,7 +55,7 @@ function footerAnimation() {
           [axis]: 0,
           duration: 1,
         },
-        0
+        0,
       );
     });
   }
@@ -77,7 +70,7 @@ function footerAnimation() {
     },
     {
       threshold: 0.6,
-    }
+    },
   );
 
   footerObserver.observe(footer);
@@ -90,7 +83,7 @@ window.addEventListener("DOMContentLoaded", () => {
   function initLenis() {
     const lenis = new Lenis({
       smooth: true,
-      lerp: 0.12,
+      lerp: 0.06,
       autoRaf: true,
     });
     lenis.on("scroll", () => {
@@ -106,14 +99,26 @@ window.addEventListener("DOMContentLoaded", () => {
   //---------------LOAD ANIMATION------------------------
 
   const heroSpans = Array.from(hero.querySelectorAll(".hero_heading_span"));
-  const heroSpansFirstLineSplited = heroSpans
-    .slice(0, 3)
-    .map((span) => {
-      return initSplit(span);
-    })
-    .flat();
-  const heroSpanSecondLineSplited = initSplit(heroSpans[3]);
   const heroCircle = document.querySelector(".hero_circle");
+
+  function initSplit(text) {
+    const splitedText = SplitText.create(text, {
+      type: "chars",
+      mask: "chars",
+    });
+    return splitedText.chars;
+  }
+
+  function createLineChars(start, end) {
+    const lineChars = heroSpans
+      .slice(start, end)
+      .map((span) => {
+        return initSplit(span);
+      })
+      .flat();
+
+    return lineChars;
+  }
 
   function initStaggerTween(chars) {
     const tween = gsap.from(chars, {
@@ -128,16 +133,15 @@ window.addEventListener("DOMContentLoaded", () => {
     return tween;
   }
 
+  const heroSpansFirstLineSplited = createLineChars(0, 3);
+  const heroSpanSecondLineSplited = createLineChars(3, 5);
   const firstLineTween = initStaggerTween(heroSpansFirstLineSplited);
   const secondLineTween = initStaggerTween(heroSpanSecondLineSplited);
-  const circleTween = gsap.from(
-    heroCircle,
-    {
-      scale: 0,
-      duration: 1,
-    },
-    1.63
-  );
+
+  const circleTween = gsap.from(heroCircle, {
+    scale: 0,
+    duration: 1,
+  });
 
   const tlHeroStagger = gsap.timeline();
   tlHeroStagger
@@ -169,6 +173,7 @@ function animateNumberScroll(section) {
   const digitHeight = 5.19;
   const safetyMargin = 2;
   const yRange = -((cardsCount - 1) * digitHeight + safetyMargin) + "rem";
+
   for (let i = 1; i < cardsCount + 1; i++) {
     const spanEl = document.createElement("span");
     spanEl.textContent = i;
@@ -222,7 +227,7 @@ function textMaskAnimation() {
         .timeline({
           scrollTrigger: {
             trigger: line,
-            start: "top 75%",
+            start: "top 50%",
             end: "bottom center",
             scrub: 1,
           },
@@ -240,7 +245,7 @@ function textMaskAnimation() {
       if (windowWidth !== window.innerWidth) {
         textSplited.revert();
         const textAnimateBackgrounds = document.querySelectorAll(
-          ".about_text.is-above"
+          ".about_text.is-above",
         );
         textAnimateBackgrounds.forEach((bg) => {
           bg.remove();
@@ -261,4 +266,4 @@ function textMaskAnimation() {
   initTextAnimation();
 }
 
-textMaskAnimation();
+textMaskAnimation(); // create the variable for the text animation just once
